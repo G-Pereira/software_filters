@@ -74,10 +74,10 @@ uint32_t prevIn = 0;
 uint32_t prevOut = 0;
 
 //tau = R*C;
-#define periodOverTau 0.0000035/0.012
+#define periodOverTau 0.0000035/0.012 // ou 292/1000000
 
 // 100x a constante de tempo do filtro passa baixo da saida
-#define OneMinusPeriodOverTau (1-periodOverTau)
+#define OneMinusPeriodOverTau 1-periodOverTau
 
 /* USER CODE END 0 */
 
@@ -357,7 +357,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 	//HAL_GPIO_TogglePin(GPIOA, Toggle_Pin);
 
 	prevIn = HAL_ADC_GetValue(&hadc1);
-	prevOut = OneMinusPeriodOverTau*prevOut+periodOverTau*prevIn;
+	prevOut = (double)OneMinusPeriodOverTau*(double)prevOut+(double)periodOverTau*(double)prevIn;
 	//TIM1->CCR1 = (uint16_t)(int)round(prevOut);
 //	prevIn = HAL_ADC_GetValue(&hadc1);
 
