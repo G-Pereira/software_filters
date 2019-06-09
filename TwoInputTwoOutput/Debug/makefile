@@ -37,8 +37,8 @@ TwoInputTwoOutput.list \
 all: TwoInputTwoOutput.elf secondary-outputs
 
 # Tool invocations
-TwoInputTwoOutput.elf: $(OBJS) $(USER_OBJS) D:\OneDrive\ -\ Universidade\ do\ Porto\Faculdade\4\ Ano\2\ Semestre\SBIC\Projeto\stm32CubeIDE\workspace_1.0.0\TwoInputTwoOutput\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "TwoInputTwoOutput.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\OneDrive - Universidade do Porto\Faculdade\4 Ano\2 Semestre\SBIC\Projeto\stm32CubeIDE\workspace_1.0.0\TwoInputTwoOutput\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TwoInputTwoOutput.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TwoInputTwoOutput.elf: $(OBJS) $(USER_OBJS) /home/gpereira/Documents/software_filters/TwoInputTwoOutput/STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "TwoInputTwoOutput.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/gpereira/Documents/software_filters/TwoInputTwoOutput/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TwoInputTwoOutput.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

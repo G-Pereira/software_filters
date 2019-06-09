@@ -128,25 +128,17 @@ int main(void) {
 
 	uint32_t iter = 0;
 
-	double in1, in2;
-	in1 = in2 = 0;
+	double in1 = 0;
 	double pi = 3.1415926;
 	double sinPeriod = 0.5;
 	double period = 0.001052;
-	double R1 = 1000;
-	double R2 = 1000;
-	double C = 0.0001;
-	double L = 0.0002;
-
-	Integrator intIn1, intIn2, intX1, intX2;
-
-	intIn1.period = intIn2.period = intX1.period = intX2.period = period;
-	intIn1.result = intIn2.result = intX1.result = intX2.result = 0;
-
-	double X1 = 0;
-	double X2 = 0;
-	double in1Integrated, in2Integrated, X1Integrated, X2Integrated;
-	double Iout, Vout;
+	double periodSquared = 0.000001106704;
+	double M = 1;
+	double Ks = 2;
+	double Kd = 0.5;
+	double x = 0;
+	double xPrev = 0;
+	double xPrevPrev = 0;
 
 //	HAL_UART_Transmit(&huart2, (uint8_t*) "Inicio \r\n", strlen("Inicio \r\n"),
 //			HAL_MAX_DELAY);
@@ -158,44 +150,20 @@ int main(void) {
 
 			in1 = 2048 + 2048 * sin((period * iter * 2 * pi) / sinPeriod);
 
-			in2 = 2048
-					+ 2048 * sin(((period * iter * 2 * pi) / sinPeriod) + pi);
-
-			in1Integrated = integrate(&intIn1, in1);
-			in2Integrated = integrate(&intIn2, in2 / R2);
-			X1Integrated = integrate(&intX1, X1);
-			X2Integrated = integrate(&intX2, X2);
-
-			X2 = in2Integrated - (X2Integrated / R2) + X1Integrated;
-			X2 /= C;
-
-			X1 = in1Integrated - X2Integrated - X1Integrated * R1;
-
-			X1 /= L;
-
-			//X1 = (intIn1.result - (intX1.result * R1) - intX2.result) / L;
-
-
-
-			//X2 = ((intIn2.result * 0.001) - (intX2.result * 0.001) + intX1.result) / C;
-
-			//Iout = (X1 * 200) + 1.65;
-			Iout = X1;
-			Vout = X2;
+		xPrevPrev = xPrev;
+		xPrev = x;
+		x = (x*(Kd*period + 2)-xPrevPrev-periodSquared/M * in1)/(1+(Kd*period)/M+(periodSquared*Ks)/M);
 
 			char str[200];
 			char valIN1[20];
-			char valIN2[20];
 			char valIout[20];
-			char valVout[20];
 
 			gcvt(in1, 8, valIN1);
-			gcvt(in2, 8, valIN2);
-			gcvt(Iout, 10, valIout);
-			gcvt(Vout, 10, valVout);
+			gcvt(x, 10, valIout);
+			//gcvt(Vout, 10, valVout);
 
-			sprintf(str, "%lu, %9s, %9s, %11s, %11s\r\n", iter, valIN1, valIN2,
-					valIout, valVout);
+			sprintf(str, "%lu, %9s, %11s\r\n", iter, valIN1,
+					valIout);
 
 			HAL_UART_Transmit(&huart2, (uint8_t*) str, strlen(str),
 			HAL_MAX_DELAY);
